@@ -52,10 +52,10 @@ function req_num($name, $default = 0) {
 }
 
 function get_layers($tiles, $zoom) {
-	global $attribution, $attrib_plain;
+	global $attribution, $attrib_nolink, $attrib_plain;
 	$needed = explode('|', $tiles);
 	$result = array();
-	$attribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>';
+	$attribution = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a>';
 	$file = @fopen('tiles.txt', 'r');
 	if( $file ) {
 		while( ($line = fgets($file)) !== false ) {
@@ -72,7 +72,8 @@ function get_layers($tiles, $zoom) {
 	}
 	if( !count($result) )
 		$result[] = 'http://tile.openstreetmap.org/!z/!x/!y.png';
-	$attrib_plain = str_replace('&copy;', '(c)', preg_replace('/<[^>]+>/', '', $attribution));
+	$attrib_nolink = preg_replace('/<[^>]+>/', '', $attribution);
+	$attrib_plain = str_replace('©', '(c)', $attrib_nolink);
 	return $result;
 }
 
