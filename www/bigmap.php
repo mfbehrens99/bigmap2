@@ -55,7 +55,7 @@ function get_layers($tiles, $zoom) {
 	global $attribution, $attrib_nolink, $attrib_plain;
 	$needed = explode('|', $tiles);
 	$result = array();
-	$attribution = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a>';
+	$attribution = '© <a href="http://openstreetmap.org">OpenStreetMap Contributors</a>';
 	$file = @fopen('tiles.txt', 'r');
 	if( $file ) {
 		while( ($line = fgets($file)) !== false ) {
