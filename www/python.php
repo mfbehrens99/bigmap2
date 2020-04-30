@@ -39,7 +39,7 @@ for x in range(xmin, xmax+1):
 			if match:
 				url = url.replace(match.group(0), random.choice(match.group(1)))
 			tilecount+=1
-			print("(" + str(totaltiles) + "/" + str(size) + ") Downloading", url, "... ");
+			print("(" + str(tilecount) + "/" + str(totaltiles) + ") Downloading", url, "... ");
 			try:
 				req = urllib.request.Request(url, headers={'User-Agent': 'BigMap/2.0'})
 				tile = urllib.request.urlopen(req).read()
