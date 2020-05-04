@@ -20,12 +20,17 @@ from PIL import Image, ImageDraw
 (zoom, xmin, ymin, xmax, ymax) = (<?=$zoom ?>, <?=$xmin ?>, <?=$ymin ?>, <?=$xmax ?>, <?=$ymax ?>)
 layers = [<?=$l ?>]
 attribution = '<?=str_replace("'", "\'", $attrib_plain) ?>'
+tilesize = 256
 xsize = xmax - xmin + 1
 ysize = ymax - ymin + 1
-tilesize = 256
+totaltiles = xsize * ysize * len(layers)
 
+print("Creating", str(xsize * tilesize) + "x" + str(ysize * tilesize), "image ...")
 resultImage = Image.new("RGBA", (xsize * tilesize, ysize * tilesize), (0,0,0,0))
 counter = 0
+tilecount=0
+
+print(totaltiles, "tiles will be downloaded ...")
 for x in range(xmin, xmax+1):
 	for y in range(ymin, ymax+1):
 		for layer in layers:
@@ -33,7 +38,8 @@ for x in range(xmin, xmax+1):
 			match = re.search("{([a-z0-9]+)}", url)
 			if match:
 				url = url.replace(match.group(0), random.choice(match.group(1)))
-			print(url, "... ");
+			tilecount+=1
+			print("(" + str(tilecount) + "/" + str(totaltiles) + ") Downloading", url, "... ");
 			try:
 				req = urllib.request.Request(url, headers={'User-Agent': 'BigMap/2.0'})
 				tile = urllib.request.urlopen(req).read()
@@ -47,10 +53,14 @@ for x in range(xmin, xmax+1):
 				time.sleep(2);
 				counter = 0
 
+print("Creating attribution ...")
 draw = ImageDraw.Draw(resultImage)
 draw.text((5, ysize*tilesize-15), attribution, (0,0,0))
 del draw
 
 now = datetime.datetime.now()
 outputFileName = "map%02d-%02d%02d%02d-%02d%02d.png" % (zoom, now.year % 100, now.month, now.day, now.hour, now.minute)
+print("Outputting file (" + outputFileName + ") ...")
 resultImage.save(outputFileName)
+
+print("Done!")
